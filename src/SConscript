@@ -1,0 +1,20 @@
+Import('env')
+
+env = env.Clone()
+
+lib=env.AddLibrary('alaya', Split(''' 
+alaya.C 
+log.C
+table.C
+mongoose.c
+'''), LIBS=["glog", 'dl', 'boost_system'])
+
+
+exe=env.AddUnitTest('test_alaya', ['test.C'], LIBS=['alaya'])
+
+env.AddPythonExtension('_pyalaya', 'pyalaya.C', prefix='alaya',
+        LIBS=['alaya', 'boost_python'])
+env.AddPythonModule('__init__.py', prefix='alaya')
+
+env.Alias('install', env.Install('$PREFIX/include/alaya', Glob('alaya/*')))
+
